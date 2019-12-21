@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 require('./db');
+const dataModel = require('./data_schema');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -23,11 +24,22 @@ app.get('/home',(req,res)=>{
 });
 
 app.post('/api',(req,res)=>{
-    const email = req.body.email;
-    const password = req.body.password;
-    //res.end("result: " + result);
+    const email = req.body.email; //req.body.email มาจาก body-parser
+    const password = req.body.password;   
     
-    res.json({status:"success",email:email, password:password});
+    dataModel.create(req.body, (err, doc)=>{
+        if(err) res.json({result:"failed"});
+        res.json({status:"success",email:email, password:password});
+    });
+   
+});
+
+app.get('/api',(req,res)=>{
+    dataModel.find((err, doc)=>{
+        if (err) res.json({result: "failed"});
+        res.json({result: "success", data: doc});
+    });
+
 });
 
 app.listen(3000,()=>{
