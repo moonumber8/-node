@@ -25,16 +25,15 @@ app.get('/home',(req,res)=>{
 
 app.post('/api',(req,res)=>{
     const email = req.body.email; //req.body.email มาจาก body-parser
-    const password = req.body.password;   
+    const phone_number = req.body.phone_number;   
     
     dataModel.create(req.body, (err, doc)=>{
         if(err) res.json({result:"failed"});
-        res.json({status:"success",email:email, password:password});
-    });
-   
+        res.json({status:"success",email:email, phone_number:phone_number});
+    }); 
 });
 
-app.get('/api',(req,res)=>{
+app.get('/list_data',(req,res)=>{
     dataModel.find((err, doc)=>{
         if (err) res.json({result: "failed"});
         res.json({result: "success", data: doc});
@@ -42,7 +41,14 @@ app.get('/api',(req,res)=>{
 
 });
 
+
+app.get('/search/:phone',(req,res)=>{
+    console.log(req.params.phone)
+    dataModel.find({phone_number:{$gt:req.params.phone}},(err, doc)=>{
+        if (err) res.json({result: "failed"});
+        //res.json({result: "success", data: doc});
+    });
+});
 app.listen(3000,()=>{
     console.log("server ok");
-});
-
+})
