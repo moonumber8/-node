@@ -42,13 +42,16 @@ app.get('/list_data',(req,res)=>{
 });
 
 
-app.get('/search/:phone',(req,res)=>{
-    console.log(req.params.phone)
-    dataModel.find({phone_number:{$gt:req.params.phone}},(err, doc)=>{
+app.get('/search/:phone_number',(req,res)=>{
+    console.log(req.params.phone_number);
+    dataModel.find({phone_number:{$eq:req.params.phone_number}},(err, doc)=>{
         if (err) res.json({result: "failed"});
-        //res.json({result: "success", data: doc});
+        res.json({ data: doc });
     });
 });
+
+
+
 app.listen(3000,()=>{
     console.log("server ok");
 })
