@@ -57,12 +57,13 @@ app.get('/search/:phone_number',(req,res)=>{
 });
 
 
-app.put('/edit_data',(req,res)=>{
-    const edit_email = req.body.email; 
-    const edit_phone_number = req.body.phone_number;   
-    dataModel.where({_id: "5e0226664b4d6b1554897c51" }).updateOne({$set: {phone_number: {$gt: req.params.phone_number}}},(err, doc)=>{
-        if (err) res.json({result: "failed"});
-        res.json({ data: doc });
+app.put('/edit_data',(req,res)=>{ 
+    const id = "5e0226664b4d6b1554897c51";
+    const email = req.body.email; //req.body.email มาจาก body-parser
+    const phone_number = req.body.phone_number; 
+    dataModel.where({ _id: id }).update({ $set: { phone_number: phone_number }},(err,data)=>{
+        if(err)res.json({result: "failed"});
+        res.json({data: data});
     });
 });
 
