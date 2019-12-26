@@ -56,17 +56,33 @@ app.get('/search/:phone_number',(req,res)=>{
     });
 });
 
-
 app.put('/edit_data',(req,res)=>{ 
-    const id = "5e0226664b4d6b1554897c51";
-    const email = req.body.email; //req.body.email มาจาก body-parser
+    const email = req.body.email;
+    const item_id = req.body.item_id;
     const phone_number = req.body.phone_number; 
-    dataModel.where({ _id: id }).update({ $set: { phone_number: phone_number }},(err,data)=>{
+    dataModel.where({ _id: item_id }).update({ $set: { phone_number: phone_number,email:email }},(err,data)=>{
         if(err)res.json({result: "failed"});
         res.json({data: data});
     });
 });
 
+app.delete('/delete/:item_id',(req,res)=>{
+    const item_id = req.params.item_id;
+    console.log("id " + req.body.item_id);
+    dataModel.deleteOne({ _id: item_id },(err,data)=>{
+        if(err)res.json({result: "failed"});
+        res.json({data: data});
+    });
+});
+
+app.get('/show_detail/:item_id',(req,res)=>{
+    const item_id = req.params.item_id;
+    console.log("id: "+item_id);
+    dataModel.findById(item_id, function (err, doc) { 
+        if(err)res.json({result: "failed"});
+        res.json({result: "success", data: doc});
+     });
+});
 
 app.listen(3000,()=>{
     console.log("server ok");
